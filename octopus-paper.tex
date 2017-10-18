@@ -70,15 +70,15 @@ Haplotype-based variant callers, which consider physical linkage between variati
 
 \invisiblesection{Motivation}
 
-Detection of genetic variation and genotyping from High-Throughput Sequencing (HTS) data is now commonplace in clinical diagnosis pipelines, and is rapidly replacing array based assays for phenotype association studies. The high resolution of sequencing based assays empowers detection of rare variants, resolution of structural variation (indels), and the potential to resolve haplotype structure with \emph{physical phasing} which provides important information for disease risk analysis and phylogenetic inference. This has lead to the development of a number of variant detection algorithms \cite{rare-variant}.
+Detection of genetic variation and genotyping from High-Throughput Sequencing (HTS) data is now commonplace in clinical diagnosis pipelines, and is rapidly replacing array based assays for phenotype association studies. The high resolution of sequencing based assays empowers detection of rare variants, resolution of structural variation (indels), and the potential to resolve haplotype structure with \emph{physical phasing} which provides important information for disease risk analysis and phylogenetic inference. This has lead to the development of a number of variant detection algorithms \cite{RN167}.
 
-Other than a handful of \emph{de novo} based assembly approaches \cite{cortex}, the majority of these algorithms are mapping based \cite{gatk, freebayes, platypus}, which require raw sequencing reads first be mapped to a reference sequence using a read mapper. Na\"\i ve variant callers use unaltered read alignments provided from a read mapper, and make calls on a positional basis \cite{samtools}. These methods make the simplifying - and mistaken - assumption that the read alignments provided by the mapper against the reference are always true. In contrast, haplotype-based methods only assume read mapping location is approximately correct and compare evidence for one or more read alignments under multiple hypothetical haplotypes. This is an improvement for two reasons. First, alignment-based errors are avoidable reducing dependence on the read mapper. Second, the genotype posterior signal-to-noise ratio improves with haplotype length because the number of erroneous haplotypes increases exponentially while the number of true haplotypes remains constant. This makes haplotype based methods more powerful than equivalent positional methods \cite{haplotype-calling}.
+Other than a handful of \emph{de novo} based assembly approaches \cite{RN148}, the majority of these algorithms are mapping based \cite{RN141, RN538, RN5}, which require raw sequencing reads first be mapped to a reference sequence using a read mapper. Na\"\i ve variant callers use unaltered read alignments provided from a read mapper, and make calls on a positional basis \cite{RN537}. These methods make the simplifying - and mistaken - assumption that the read alignments provided by the mapper against the reference are always true. In contrast, haplotype-based methods only assume read mapping location is approximately correct and compare evidence for one or more read alignments under multiple hypothetical haplotypes. This is an improvement for two reasons. First, alignment-based errors are avoidable reducing dependence on the read mapper. Second, the genotype posterior signal-to-noise ratio improves with haplotype length because the number of erroneous haplotypes increases exponentially while the number of true haplotypes remains constant. This makes haplotype based methods more powerful than equivalent positional methods \cite{RN166}.
 
-While there are now several haplotype-based methods available, they have all focused on germline variation in pooled sequencing studies; employing similar genotyping models derived from population genetics to explain observed read data \cite{gatk, freebayes, platypus}. Such models offer a poor approximation to data typically generated from other types of sequencing experiment, such as tumour or bacterial sequencing. In other cases, valuable prior information, such as pedigree structure, is not fully utilised. This can lead to a significant reduction in power to detect and classify real variation. Although na\"\i ve methods that implement more appropriate models are often available, they often perform worse than poorly fitted haplotype-based tools. Researchers often resort to spending valuable time implementing bespoke pipelines that involve post-hoc intersections of multiple caller outputs to obtain required inferences. This is especially prevalent for studies requiring somatic and \emph{de novo} mutation detection, which are often severely limited in ability to characterise all types of variation, potentially leading to misleading conclusions.
+While there are now several haplotype-based methods available, they have all focused on germline variation in pooled sequencing studies; employing similar genotyping models derived from population genetics to explain observed read data \cite{RN141, RN538, RN5}. Such models offer a poor approximation to data typically generated from other types of sequencing experiment, such as tumour or bacterial sequencing. In other cases, valuable prior information, such as pedigree structure, is not fully utilised. This can lead to a significant reduction in power to detect and classify real variation. Although na\"\i ve methods that implement more appropriate models are often available, they often perform worse than poorly fitted haplotype-based tools. Researchers often resort to spending valuable time implementing bespoke pipelines that involve post-hoc intersections of multiple caller outputs to obtain required inferences. This is especially prevalent for studies requiring somatic and \emph{de novo} mutation detection, which are often severely limited in ability to characterise all types of variation, potentially leading to misleading conclusions.
 
-There are other important shortcomings to existing tools: (i) sequencing errors are not adequately modelled; most methods \cite{freebayes, gatk} assume uniform sequencing errors, but real sequencing errors are often systematic \cite{illumina-error}, which inflates false positive calls; (ii) read mapping qualities \cite{maq} are not properly modelled which can severely reduce specificity; (iii) haplotype generation lacks sensitivity due to approaches that are either too simplistic \cite{freebayes}, or are too dependent on parametrisation \cite{gatk}; (iv) some difficult regions are ignored due to 'windowing' problems - where there are too many alternative alleles in a region to jointly consider.
+There are other important shortcomings to existing tools: (i) sequencing errors are not adequately modelled; most methods \cite{RN538, RN141} assume uniform sequencing errors, but real sequencing errors are often systematic \cite{RN149}, which inflates false positive calls; (ii) read mapping qualities \cite{RN138} are not properly modelled which can severely reduce specificity; (iii) haplotype generation lacks sensitivity due to approaches that are either too simplistic \cite{RN538}, or are too dependent on parametrisation \cite{RN141}; (iv) some difficult regions are ignored due to 'windowing' problems - where there are too many alternative alleles in a region to jointly consider.
 
-Finally, variant phase information is becoming increasingly valuable to resolve population haplotype structure. Obtaining phased variants directly from raw sequence data is challenging because there is uncertainty in variant and genotype calls in addition to uncertainty in any particular haplotype structure. Although some existing methods implement non-probabilistic physical phasing algorithms \cite{freebayes}, these approaches cannot resolve regions with weak read support or capture biologically meaningful information available in the genotype model, and are usually only effective over regions smaller than one read length with unambiguous high-coverage read support.
+Finally, variant phase information is becoming increasingly valuable to resolve population haplotype structure. Obtaining phased variants directly from raw sequence data is challenging because there is uncertainty in variant and genotype calls in addition to uncertainty in any particular haplotype structure. Although some existing methods implement non-probabilistic physical phasing algorithms \cite{RN538}, these approaches cannot resolve regions with weak read support or capture biologically meaningful information available in the genotype model, and are usually only effective over regions smaller than one read length with unambiguous high-coverage read support.
 
 We sought to address these issues by designing a method that treats haplotype generation, read error modelling, genotype inference, and phasing independently. This allows us to apply the most appropriate statistical model at each stage, whilst taking advantage of common haplotype generation machinery. We designed a genotype posterior based phasing algorithm that is able to achieve far greater phase lengths than existing tools, sometimes well beyond one read length. Our algorithm is implemented in a C++14 application, Octopus.
 
@@ -88,7 +88,7 @@ We sought to address these issues by designing a method that treats haplotype ge
 
 The performance of haplotype-based methods is bounded by the ability to propose true haplotype sequences. The probability a true haplotype is observed in the read data is conditional on the underlying sample genotypes; some haplotypes may inherently have low observation probability (e.g. in tumour samples). It is therefore crucial to be able to achieve high sensitivity at this stage whilst being conscious of the increased computational burden of proposing many wrong haplotypes.
 
-Haplotype construction begins by extracting putative alleles directly from the read alignments, although this can be augmented by external sources. Our algorithm distinguishes alleles from haplotypes: alleles are atomic mutation events whilst haplotypes are ordered sets of non-overlapping alleles. By default two methods are used for read-based allele generation: (i) variants supported directly from read alignments; (ii) variants identified via local re-assembly. The former method is usually more robust as it is only dependent on the alignment routine used by the mapper. Whilst the latter is able to resolve complex variation which may not be present in the read alignments due to inadequate read length. The main drawback of the latter approach is that it is highly sensitive to kmer size used and the genomic region selected for assembly, which can result in high quality variants being missed. By integrating both approaches, our algorithm is able to achieve higher sensitivity than other approaches which use one or the other \cite{gatk, freebayes}.
+Haplotype construction begins by extracting putative alleles directly from the read alignments, although this can be augmented by external sources. Our algorithm distinguishes alleles from haplotypes: alleles are atomic mutation events whilst haplotypes are ordered sets of non-overlapping alleles. By default two methods are used for read-based allele generation: (i) variants supported directly from read alignments; (ii) variants identified via local re-assembly. The former method is usually more robust as it is only dependent on the alignment routine used by the mapper. Whilst the latter is able to resolve complex variation which may not be present in the read alignments due to inadequate read length. The main drawback of the latter approach is that it is highly sensitive to kmer size used and the genomic region selected for assembly, which can result in high quality variants being missed. By integrating both approaches, our algorithm is able to achieve higher sensitivity than other approaches which use one or the other \cite{RN141, RN538}.
 
 Haplotypes are exhaustively constructed from all viable allele combinations. This differs from other approaches which construct haplotypes directly. The advantage of our approach is that haplotypes not directly supported by any particular read alignment can be proposed which enables arbitrary extension of existing haplotypes, enabling posterior based phasing beyond a single read length. The main limitation is that the number of haplotypes is exponential in the number of alleles, which restricts the length of candidate haplotypes (windowing). We have solved this issue by developing a graph-based data-structure, dubbed a 'haplotype-tree'. Nodes in the tree are alleles, and branches are unique haplotypes. Branches can be readily extended and pruned, accelerated by a hash-table lookup. This enables haplotypes with low posterior support to be removed from the tree before proliferation. This procedure can be repeated to obtain arbitrary long haplotypes whilst keeping the number of haplotypes under consideration roughly linear.
 
@@ -121,17 +121,17 @@ The algorithm proceeds by calculating likelihoods for each read conditional on e
 
 The next step of the algorithm is to calculate posterior probability distributions for all  Bayesian genotype model latent variables (\textbf{Figure \ref{fig:models}}), which are used by \emph{calling models} to make variant, genotype calls, and any other sample-type specific inferences.
 
-The population model is applicable to a set of samples of known ploidy and unknown pedigree. Variations of this model are implemented by most existing methods \cite{freebayes, gatk, platypus, samtools}. For the case of a single sample the model simplifies to:
+The population model is applicable to a set of samples of known ploidy and unknown pedigree. Variations of this model are implemented by most existing methods \cite{RN538, RN141, RN5, RN537}. For the case of a single sample the model simplifies to:
 
 \begin{equation*}
     p(\boldsymbol{g} | \boldsymbol{R}, \mathcal{M}_{g}) \propto p(\boldsymbol{g} | \mathcal{M}_{g}) \prod_{r \in \boldsymbol{R}} \frac{1}{|\boldsymbol{g}|} \sum_{i = 1}^{|\boldsymbol{g}|} p(r | \boldsymbol{g}_i)
 \end{equation*}
 
-where $p(\boldsymbol{g} | \mathcal{M}_{g})$ is a germline prior model. For more than one sample exact inference is usually intractable and approximations are required. Genotype likelihoods are first computed under a simpler model using Expectation Maximisation \cite{platypus}, and then high likelihood genotype combinations are used to compute posterior probabilities under the Bayesian model.
+where $p(\boldsymbol{g} | \mathcal{M}_{g})$ is a germline prior model. For more than one sample exact inference is usually intractable and approximations are required. Genotype likelihoods are first computed under a simpler model using Expectation Maximisation \cite{RN5}, and then high likelihood genotype combinations are used to compute posterior probabilities under the Bayesian model.
 
 The trio model is appropriate for parent-offspring trios as the genetic inheritance of genetic information from parent to child can be explicitly modelled. The parent-child relationship is stochastic as there is uncertainty in the inherited haplotype and because of \emph{de novo} mutations during meiosis. Recombination is not considered. Parental genotypes are assumed to share information as in the population model. This model can be computed exactly in most cases.
 
-The tumour model is intended to model populations of somatically mutated heterogeneous tumour cell samples from the same individual. In contrast with the other models, the genotype latent variable in this model is augmented with an additional haplotype to capture somatically mutated tumour genotypes. Although more than one unique \emph{somatic haplotypes} are possible, such observations are rare over typically considered region lengths (up to a few kb) \cite{rare-somatic}. Also unlike the other models, the tumour model does not assume equal genotype mixture weights to reflect the possibility of low-frequency alleles observations due to local copy-number changes and tumour cell impurity caused by heterogeneous sub-clonal sampling and normal contamination. To explicitly model sub-clonal cell populations, each sample has independent mixture priors, which also allows implicit modelling of a normal sample. Approximate posterior probability distributions are assigned to genotypes and sample mixtures using a Variational Bayes algorithm.
+The tumour model is intended to model populations of somatically mutated heterogeneous tumour cell samples from the same individual. In contrast with the other models, the genotype latent variable in this model is augmented with an additional haplotype to capture somatically mutated tumour genotypes. Although more than one unique \emph{somatic haplotypes} are possible, such observations are rare over typically considered region lengths (up to a few kb) \cite{RN86}. Also unlike the other models, the tumour model does not assume equal genotype mixture weights to reflect the possibility of low-frequency alleles observations due to local copy-number changes and tumour cell impurity caused by heterogeneous sub-clonal sampling and normal contamination. To explicitly model sub-clonal cell populations, each sample has independent mixture priors, which also allows implicit modelling of a normal sample. Approximate posterior probability distributions are assigned to genotypes and sample mixtures using a Variational Bayes algorithm.
 
 Variant calls are made by marginalising over the relevant posterior probability distributions assigned by the calling model. Posterior inferences may also include a Bayesian model comparison to reduce false positive calls due to poor model fit. In particular, somatic mutation calls are only made if the \emph{evidence} for the tumour model is significantly higher than the evidence for the population model (with a single sample). For germline calling, evidence comparison with a incremented ploidy model may be used to detect false positive variant calls caused by mapping errors. For each allele, unphased genotype probabilities (in allele space) are calculated by marginalising over full genotype posterior distributions (in haplotype space).
 
@@ -151,7 +151,7 @@ Samples are phased independently. First, all possible genotypes are partitioned 
 
 \subsection*{Germline variants from WGS}
 
-Although germline variant calling is a mature field, recent benchmark studies have shown there is still surprisingly low concordance between callers, and performance is highly dependent on the mapper used \cite{giab-comp1, giab-comp2}. To assess the performance of our algorithm on whole-genome data we used variants from the well studied 1000G sample NA12878, using the gold-standard high confidence calls provided by the Genome in a Bottle (GIAB) consortium \cite{giab} as a benchmark. We made nine call-sets for each caller, one for each coverage-mapper combination (mappers: BWA-mem \cite{bwa-mem}, Bowtie2 \cite{bowtie2}, and Novoalign). Calls were compared using RTG-tools \cite{rtg-tools} which is more accurate than na\"\i ve intersection methods as calls are compared at a haplotype level. We compared our algorithm to four widely used tools, GATK HaplotypeCaller \cite{gatk}, Freebayes \cite{freebayes}, Platypus \cite{platypus}, and Samtools \cite{samtools}. 
+Although germline variant calling is a mature field, recent benchmark studies have shown there is still surprisingly low concordance between callers, and performance is highly dependent on the mapper used \cite{RN162, RN163}. To assess the performance of our algorithm on whole-genome data we used variants from the well studied 1000G sample NA12878, using the gold-standard high confidence calls provided by the Genome in a Bottle (GIAB) consortium \cite{RN153} as a benchmark. We made nine call-sets for each caller, one for each coverage-mapper combination (mappers: BWA-mem \cite{RN539}, Bowtie2 \cite{RN164}, and Novoalign). Calls were compared using RTG-tools \cite{RN169} which is more accurate than na\"\i ve intersection methods as calls are compared at a haplotype level. We compared our algorithm to four widely used tools, GATK HaplotypeCaller \cite{RN141}, Freebayes \cite{RN538}, Platypus \cite{RN5}, and Samtools \cite{RN537}. 
 
 \begin{figure}[h]
 \centering
@@ -163,7 +163,7 @@ Although germline variant calling is a mature field, recent benchmark studies ha
 
 \subsection*{Germline variants from exome-capture}
 
-Many clinical pipelines use exome-capture sequencing to detect disease risk variants. While in principal exome variant calling is easier than whole genome calling, due to differences in library preparation and sequencing depth, there are subtle artefacts present in exome data not in whole genome sequence data. We sought to evaluate the performance of our algorithm on clinical exome-capture sequence data. We compared our method to other tools by callings variants in the ICR 142 validation series data \cite{icr142} which includes positive and negative Sanger validation sites for a number of exome samples.
+Many clinical pipelines use exome-capture sequencing to detect disease risk variants. While in principal exome variant calling is easier than whole genome calling, due to differences in library preparation and sequencing depth, there are subtle artefacts present in exome data not in whole genome sequence data. We sought to evaluate the performance of our algorithm on clinical exome-capture sequence data. We compared our method to other tools by callings variants in the ICR 142 validation series data \cite{RN154} which includes positive and negative Sanger validation sites for a number of exome samples.
 
 \begin{table}[h]
 \centering
@@ -184,23 +184,23 @@ Samtools & 0 & 0 & 0 & 0 \\
 
 \subsection*{Somatic mutations in paired tumour-normal samples}
 
-Cancer is a genetic disease caused by mutations that lead to uncontrollable cell division. Different cancers are driven by different sets of mutations to different gene pathways. A crucial step to understanding cancer; how to provide new diagnostics and therapies, is to accurately be able to genotype somatic mutations in tumours. Cancer genomes are often highly mutated, containing structural variation that alters local copy number. Cells from the same tumour form pockets of genetically heterogenous clones, and there is little guarantee of clone representation in the final sequencing library. All this makes the detection of somatic mutations challenging, particularly if the inaccurate assumptions are made when modelling the observed data. In particular, germline ploidy assumptions are likely to lead to low sensitivity to low allelic frequency somatic mutations. A number of bespoke somatic mutation detection tools have been developed in an attempt to address these issues \cite{mutect, somaticsniper, radia, strelka, varscan2}. While these algorithms provide more appropriate models than advanced germline variant callers, none, other than a recent update to MuTect (Mutect2) are haplotype-based.
+Cancer is a genetic disease caused by mutations that lead to uncontrollable cell division. Different cancers are driven by different sets of mutations to different gene pathways. A crucial step to understanding cancer; how to provide new diagnostics and therapies, is to accurately be able to genotype somatic mutations in tumours. Cancer genomes are often highly mutated, containing structural variation that alters local copy number. Cells from the same tumour form pockets of genetically heterogenous clones, and there is little guarantee of clone representation in the final sequencing library. All this makes the detection of somatic mutations challenging, particularly if the inaccurate assumptions are made when modelling the observed data. In particular, germline ploidy assumptions are likely to lead to low sensitivity to low allelic frequency somatic mutations. A number of bespoke somatic mutation detection tools have been developed in an attempt to address these issues \cite{RN142, RN146, RN150, RN143, RN145}. While these algorithms provide more appropriate models than advanced germline variant callers, none, other than a recent update to MuTect (Mutect2) are haplotype-based.
 
 To demonstrate the accuracy of our method at calling somatic mutations in tumour-normal paired cancer samples, we compared the sensitivity and specificity of our method to popular somatic callers MuTect, Mutect2, SomaticSniper, Radia, Strelka, and VarScan2.
 
 \subsection*{Somatic mutations in tumour only samples}
 
-Reliable paired normal tissue samples are not always available when studying tumours from cancer patients, either because of restrictions present in a clinical setting, or because samples are archival. Most somatic mutation callers require a paired normal sample \cite{mutect, somaticsniper, radia, strelka, varscan2}, although a recent tool was made available to specifically to deal analyse tumour only samples \cite{somvarius}. We looked to test the robustness of our algorithm by running the previous samples without the paired normal samples, and compared these calls to our previous calls, and to those made by SomVarIUS.
+Reliable paired normal tissue samples are not always available when studying tumours from cancer patients, either because of restrictions present in a clinical setting, or because samples are archival. Most somatic mutation callers require a paired normal sample \cite{RN142, RN146, RN150, RN143, RN145}, although a recent tool was made available to specifically to deal analyse tumour only samples \cite{RN161}. We looked to test the robustness of our algorithm by running the previous samples without the paired normal samples, and compared these calls to our previous calls, and to those made by SomVarIUS.
 
 \subsection*{\emph{De novo} mutations in parent-offspring trios}
 
-Random germline \emph{de novo} mutations resulting from imperfections in the DNA replication process during meiosis provide the necessary genetic variation for evolution. They are also known to be causative of several Mendelian and polygenic diseases \cite{denovos-disease, schizophrenia-denovo, id-denovo}. Large scale characterisation of \emph{de novo} mutations in population studies reveals important insights into population structure and demographic history \cite{denovo-pop}. The fidelity of the DNA replication process means the number of \emph{de novo} mutations expected per genome duplication event is small, usually less than 100 mutations per duplication in humans \cite{denovo-rate}.
+Random germline \emph{de novo} mutations resulting from imperfections in the DNA replication process during meiosis provide the necessary genetic variation for evolution. They are also known to be causative of several Mendelian and polygenic diseases \cite{RN157, RN160, RN159}. Large scale characterisation of \emph{de novo} mutations in population studies reveals important insights into population structure and demographic history \cite{RN158}. The fidelity of the DNA replication process means the number of \emph{de novo} mutations expected per genome duplication event is small, usually less than 100 mutations per duplication in humans \cite{RN6}.
 
 \subsection*{Bacterial calling using HTS data}
 
 HTS is rapidly replacing culture based assays to diagnose infectious diseases in the clinic. Its potential to detect and identify strains means that can be used to establish drug-susceptibility profiles that potentially offers patients faster, more accurate diagnosis, and hence targeted treatment. This is especially important when patients present with multiple drug-resistant bacterium such a Mycobacterium Tuberculosis; a specific early diagnosis can result in life-saving treatment.
 
-Some bacteria have high mutation rates resulting in high degrees of heterogeneity in a sample; with small fraction of cells containing a mutation. In addition, patients may be infected with multiple strains of the same species resulting in pseudo-poly-ploidy genotypes. These conditions render many germline variant calling tools inappropriate and underpowered \cite{microbial-snp-callling}.
+Some bacteria have high mutation rates resulting in high degrees of heterogeneity in a sample; with small fraction of cells containing a mutation. In addition, patients may be infected with multiple strains of the same species resulting in pseudo-poly-ploidy genotypes. These conditions render many germline variant calling tools inappropriate and underpowered \cite{RN165}.
 
 \subsection*{Genotyping HLA loci}
 
@@ -212,185 +212,8 @@ As the use of high-throughput sequencing technology expands to new types of orga
 
 Single-cell methods will soon enable us to accurately sequence the genomes of individual cells, potentially revolutionising the way we characterise germline and tumour genomes. As our understanding of molecular biology improves, we will be able to devise better statistical models to explain single cell data. Octopus offers an exciting opportunity to implement these models to uncover new insights into genetic variation within individuals.
 
-\begin{thebibliography}{9}
-
-\bibitem{samtools} 
-Li H. 
-\textit{A statistical framework for SNP calling, mutation discovery, association mapping and population genetical parameter estimation from sequencing data}. 
-Bioinformatics. 2011.
-
-\bibitem{maq} 
-Li, H., Ruan, J. \& Durbin, R.
-\textit{Mapping short DNA sequencing reads and calling
-variants using mapping quality scores}. 
-Genome Res. 2008.
-
-\bibitem{cortex} 
-Iqbal et al. 
-\textit{De novo assembly and genotyping of variants using colored de Bruijn graphs}. 
-Nature Genetics. 2012.
-
-\bibitem{gatk} 
-DePristo et al. 
-\textit{A framework for variation discovery and genotyping using next-generation DNA sequencing data}. 
-Nature Genetics. 2011.
-
-\bibitem{platypus} 
-Rimmer et al. 
-\textit{Integrating mapping-, assembly- and haplotype-based approaches for calling variants in clinical sequencing applications}. 
-Nature Genetics. 2014.
-
-\bibitem{freebayes}
-Garrison E, Marth G.
-\textit{Haplotype-based variant detection from short-read sequencing}.
-arXiv preprint.
-
-\bibitem{illumina-error}
-Schirmer et al.
-\textit{Insight into biases and sequencing errors for amplicon sequencing with the Illumina MiSeq platform}.
-Nucl. Acids Res. 2015.
-
-\bibitem{mutect} 
-Cibulskis et al. 
-\textit{Sensitive detection of somatic point mutations in impure and heterogeneous cancer samples}. 
-Nature Genetics. 2013.
-
-\bibitem{somaticsniper} 
-Larson et al. 
-\textit{SomaticSniper: identification of somatic point mutations in whole genome sequencing data}. 
-Bioinformatics. 2012.
-
-\bibitem{strelka} 
-Saunders, C.T. et al.
-\textit{Strelka: accurate somatic small-variant calling from sequenced tumor-normal sample pairs}. 
-Bioinformatics. 2012.
-
-\bibitem{radia} 
-Radenbaugh, A.J. et al
-\textit{RADIA: RNA and DNA integrated analysis for somatic mutation detection}. 
-PLoS ONE. 2014.
-
-\bibitem{varscan2} 
-Koboldt et al
-\textit{VarScan 2: somatic mutation and copy number alteration discovery in cancer by exome sequencing}. 
-Genome Res. 2012.
-
-\bibitem{triodenovo}
-Wei et al.
-\textit{A Bayesian framework for de novo mutation calling in parents-offspring trios}.
-Bioinformatics. 2015.
-
-\bibitem{breseq} 
-Deatherage DE, Barrick JE. 
-\textit{Identification of mutations in laboratory-evolved microbes from next-generation sequencing data using breseq}. 
-Methods Mol Biol. 2014.
-
-\bibitem{giab}
-Zook et al.
-\textit{Integrating human sequence data sets provides a resource of benchmark SNP and indel genotype calls}.
-Nature Biotechnology. 2014.
-
-\bibitem{icr142}
-Ruark et al.
-\textit{The ICR142 NGS validation series: a resource for orthogonal assessment of NGS analysis}.
-F1000Research. 2016
-
-\bibitem{somaticbenchmark}
-Alioto et al.
-\textit{A comprehensive assessment of somatic mutation detection in cancer using whole-genome sequencing}.
-Nature Communications. 2015.
-
-\bibitem{icgc-dream}
-Ewing et al.
-\textit{Combining tumor genome simulation with crowdsourcing to benchmark somatic single-nucleotide-variant detection}.
-Nature Methods. 2015.
-
-\bibitem{breast-cancer-somatics}
-nik-Zainal et al.
-\textit{Landscape of somatic mutations in 560 breast cancer whole-genome sequences}.
-Nature. 2016.
-
-\bibitem{trio}
-Conrad et al.
-\textit{Variation in genome-wide mutation rates within and between human families}.
-Nature Genetics. 2011.
-
-\bibitem{denovos-disease}
-Veltman and Brunner.
-\textit{De novo mutations in human genetic disease}.
-Nature Reviews Genetics. 2012.
-
-\bibitem{denovo-pop}
-Francioli et al.
-\textit{Whole-genome sequence variation, population structure and demographic history of the Dutch population}.
-Nature Genetics. 2014.
-
-\bibitem{id-denovo}
-Gilissen. et al.
-\textit{Genome sequencing identifies major causes of severe intellectual disability}.
-Nature. 2014.
-
-\bibitem{schizophrenia-denovo}
-Xu et al.
-\textit{De novo gene mutations highlight patterns of genetic and neural complexity in schizophrenia}.
-Nature Genetics. 2012.
-
-\bibitem{denovo-rate}
-Kong et al.
-\textit{Rate of de novo mutations and the importance of father’s age to disease risk}.
-Nature. 2012.
-
-\bibitem{rtg-tools}
-Cleary et al.
-\textit{Comparing Variant Call Files for Performance Benchmarking of Next-Generation Sequencing Variant Calling Pipelines}.
-arXiv preprint.
-
-\bibitem{somvarius}
-Smith et al.
-\textit{SomVarIUS: somatic variant identification from unpaired tissue samples}.
-Bioinformatics. 2015.
-
-\bibitem{giab-comp1}
-Cornish, A and Guda, C.
-\textit{A Comparison of Variant Calling Pipelines Using Genome in a Bottle as a Reference}.
-Biomed Res Int. 2015.
-
-\bibitem{giab-comp2}
-Hwang et al.
-\textit{Systematic comparison of variant calling pipelines using gold standard personal exome variants}.
-Scientific Reports. 2015.
-
-\bibitem{bwa-mem}
-Li H.
-\textit{Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM}.
-arXiv preprint.
-
-\bibitem{bowtie2}
-Ben Langmead \& Steven L Salzberg.
-\textit{Fast gapped-read alignment with Bowtie 2}.
-Nature Methods. 2012.
-
-\bibitem{microbial-snp-callling}
-Olson et al.
-\textit{Best practices for evaluating single nucleotide variant calling methods for microbial genomics}.
-Front Genet. 2015.
-
-\bibitem{haplotype-calling}
-Lo et al.
-\textit{Comparing variant calling algorithms for target-exon sequencing in a large sample}.
-BMC Bioinformatics. 2015.
-
-\bibitem{rare-variant}
-Wang and Lin.
-\textit{Detecting associations of rare variants with common diseases: collapsing or haplotyping?}.
-Brief Bioinform. 2015.
-
-\bibitem{rare-somatic}
-Alexandrov et al.
-\textit{Signatures of mutational processes in human cancer}.
-Nature. 2013.
-
-\end{thebibliography}
+\bibliographystyle{plos2009}
+\bibliography{main}
 
 \section*{Online methods}
 
