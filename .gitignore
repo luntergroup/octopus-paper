@@ -34,3 +34,5 @@
 *.loa
 
 *.lb
+
+\.DS_Store
