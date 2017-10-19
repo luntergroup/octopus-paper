@@ -97,7 +97,7 @@ Haplotypes are exhaustively constructed from all viable allele combinations. Thi
 
 The algorithm proceeds by calculating likelihoods for each read conditional on each haplotype using a Hidden Markov Model (HMM). Base mismatch and indel emission distributions are dependent on surrounding sequence context and sequencing technology, the former is derived from base quality scores. Error penalties occurring outside the current active region are deducted by following the Viterbi path. It may then be necessary to eliminate some haplotypes using likelihood based statistics to produce a final set of haplotypes.
 
-\begin{figure*}[h]
+\begin{figure*}[ht]
     \centering
     \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=\textwidth]{figures/population_model}
@@ -140,7 +140,7 @@ Variant calls are made by marginalising over the relevant posterior probability 
 
 The genotype posterior probability distributions computed in the last step are used to compute physical phasing of called variant sites. No read data is required as all information available from the read data as well as any prior information is contained in the posterior distributions.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/phasing}
 \caption{Posterior based variant phasing with phase complement sets: Genotypes are partitioned into phase complement sets which are used to calculate a phase score, the weighted entropy of each phase complement set. The painted haplotypes show one possible local allele boundary.}
@@ -154,7 +154,7 @@ Samples are phased independently. First, all possible genotypes are partitioned 
 
 Although germline variant calling is a mature field, recent benchmark studies have shown there is still surprisingly low concordance between callers, and performance is highly dependent on the mapper used \cite{RN162, RN163}. To assess the performance of our algorithm on whole-genome data we used variants from the well studied 1000G sample NA12878, using the gold-standard high confidence calls provided by the Genome in a Bottle (GIAB) consortium \cite{RN153} as a benchmark. We made nine call-sets for each caller, one for each coverage-mapper combination (mappers: BWA-mem \cite{RN539}, Bowtie2 \cite{RN164}, and Novoalign). Calls were compared using RTG-tools \cite{RN169} which is more accurate than na\"\i ve intersection methods as calls are compared at a haplotype level. We compared our algorithm to four widely used tools, GATK HaplotypeCaller \cite{RN141}, Freebayes \cite{RN538}, Platypus \cite{RN5}, and Samtools \cite{RN537}. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/giab-benchmark}
 \caption{ROC curves comparing variant callers on GIAB high confidence calls.}
@@ -166,7 +166,7 @@ Although germline variant calling is a mature field, recent benchmark studies ha
 
 Many clinical pipelines use exome-capture sequencing to detect disease risk variants. While in principal exome variant calling is easier than whole genome calling, due to differences in library preparation and sequencing depth, there are subtle artefacts present in exome data not in whole genome sequence data. We sought to evaluate the performance of our algorithm on clinical exome-capture sequence data. We compared our method to other tools by callings variants in the ICR 142 validation series data \cite{RN154} which includes positive and negative Sanger validation sites for a number of exome samples.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{ICR142 series summary}
 \begin{tabular}{lcccc}
