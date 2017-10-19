@@ -183,6 +183,10 @@ Samtools & 0 & 0 & 0 & 0 \\
 \end{tabular}
 \end{table}
 
+\subsection*{\emph{De novo} mutations in parent-offspring trios}
+
+Random germline \emph{de novo} mutations resulting from imperfections in the DNA replication process during meiosis provide the necessary genetic variation for evolution. They are also known to be causative of several Mendelian and polygenic diseases \cite{RN157, RN160, RN159}. Large scale characterisation of \emph{de novo} mutations in population studies reveals important insights into population structure and demographic history \cite{RN158}. The fidelity of the DNA replication process means the number of \emph{de novo} mutations expected per genome duplication event is small, usually less than 100 mutations per duplication in humans \cite{RN6}.
+
 \subsection*{Somatic mutations in paired tumour-normal samples}
 
 Cancer is a genetic disease caused by mutations that lead to uncontrollable cell division. Different cancers are driven by different sets of mutations to different gene pathways. A crucial step to understanding cancer; how to provide new diagnostics and therapies, is to accurately be able to genotype somatic mutations in tumours. Cancer genomes are often highly mutated, containing structural variation that alters local copy number. Cells from the same tumour form pockets of genetically heterogenous clones, and there is little guarantee of clone representation in the final sequencing library. All this makes the detection of somatic mutations challenging, particularly if the inaccurate assumptions are made when modelling the observed data. In particular, germline ploidy assumptions are likely to lead to low sensitivity to low allelic frequency somatic mutations. A number of bespoke somatic mutation detection tools have been developed in an attempt to address these issues \cite{RN142, RN146, RN150, RN143, RN145}. While these algorithms provide more appropriate models than advanced germline variant callers, none, other than a recent update to MuTect (Mutect2) are haplotype-based.
@@ -192,10 +196,6 @@ To demonstrate the accuracy of our method at calling somatic mutations in tumour
 \subsection*{Somatic mutations in tumour only samples}
 
 Reliable paired normal tissue samples are not always available when studying tumours from cancer patients, either because of restrictions present in a clinical setting, or because samples are archival. Most somatic mutation callers require a paired normal sample \cite{RN142, RN146, RN150, RN143, RN145}, although a recent tool was made available to specifically to deal analyse tumour only samples \cite{RN161}. We looked to test the robustness of our algorithm by running the previous samples without the paired normal samples, and compared these calls to our previous calls, and to those made by SomVarIUS.
-
-\subsection*{\emph{De novo} mutations in parent-offspring trios}
-
-Random germline \emph{de novo} mutations resulting from imperfections in the DNA replication process during meiosis provide the necessary genetic variation for evolution. They are also known to be causative of several Mendelian and polygenic diseases \cite{RN157, RN160, RN159}. Large scale characterisation of \emph{de novo} mutations in population studies reveals important insights into population structure and demographic history \cite{RN158}. The fidelity of the DNA replication process means the number of \emph{de novo} mutations expected per genome duplication event is small, usually less than 100 mutations per duplication in humans \cite{RN6}.
 
 \subsection*{Bacterial calling using HTS data}
 
@@ -214,7 +214,7 @@ As the use of high-throughput sequencing technology expands to new types of orga
 Single-cell methods will soon enable us to accurately sequence the genomes of individual cells, potentially revolutionising the way we characterise germline and tumour genomes. As our understanding of molecular biology improves, we will be able to devise better statistical models to explain single cell data. Octopus offers an exciting opportunity to implement these models to uncover new insights into genetic variation within individuals.
 
 \bibliographystyle{plos2009}
-\bibliography{main}
+\bibliography{octopus-paper}
 
 \section*{Online methods}
 
