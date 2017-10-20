@@ -140,7 +140,7 @@ Variant calls are made by marginalising over the relevant posterior probability 
 
 \subsection*{Statistical phasing}
 
-The genotype posterior probability distributions computed in the previous step are used to compute physical phasing of called variant sites. No read data is required as all information available from the read data as well as any prior information is contained in the posterior distributions.
+The genotype posterior probability distributions computed in the previous step are used to compute physical phasing of called variant sites. No read data is required as all information available from the reads, as well as any prior information, is already contained in the posterior distribution. The advantage of this method is exemplified when calling trios as the genotype prior can be strongly informative about phase due to identity by decent restrictions.
 
 \begin{figure}[ht]
 \centering
@@ -150,7 +150,7 @@ The genotype posterior probability distributions computed in the previous step a
 \vspace{-1.5em}
 \end{figure}
 
-Samples are phased independently. First, all possible genotypes are partitioned into  'phase complement' sets (genotypes that share the same alleles at every site), there is only one such partitioning (\textbf{Figure \ref{fig:phasing}}). A phase score is defined as the weighted entropies of each normalised phase complement set, with respect to the genotypes present in each phase complement set. Low phase scores indicate less ambiguous phasing. The phasing algorithm finds the smallest set of genomic subregions such that each subregion has a phase score below a given value. 
+Samples are phased independently. All possible genotypes are partitioned uniquely into  \emph{phase complement} sets (genotypes that share the same allele set at every site), there is only one such partitioning (\textbf{Figure \ref{fig:phasing}}). A phase score is defined as the weighted entropies of each normalised phase complement set, with respect to the genotypes present in each phase complement set. Lower phase scores indicate less ambiguous phasing. If the phase score for a given set of genotypes is lower than a given threshold the region is considered phased, otherwise, each genotype in the set can be broken into two parts (all at the same position) which results in two unphased sets of partial genotypes. The phase scores of these two partial sets is never greater than the phase score of the original genotype set. The phasing algorithm therefore iteratively finds the smallest set of breakpoints such that the partial genotype sets defined by those breakpoints are all phased.
 
 \subsection*{Germline variants from WGS}
 
