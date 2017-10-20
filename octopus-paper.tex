@@ -154,15 +154,24 @@ Samples are phased independently. All possible genotypes are partitioned uniquel
 
 \subsection*{Germline variants from WGS}
 
-Although germline variant calling is a mature field, recent benchmark studies have shown there is still surprisingly low concordance between callers, and performance is highly dependent on the mapper used \cite{RN162, RN163}. To assess the performance of our algorithm on whole-genome data we used variants from the well studied 1000G sample NA12878, using the gold-standard high confidence calls provided by the Genome in a Bottle (GIAB) consortium \cite{RN153} as a benchmark. We made nine call-sets for each caller, one for each coverage-mapper combination (mappers: BWA-mem \cite{RN539}, Bowtie2 \cite{RN164}, and Novoalign). Calls were compared using RTG-tools \cite{RN169} which is more accurate than na\"\i ve intersection methods as calls are compared at a haplotype level. We compared our algorithm to four widely used tools, GATK HaplotypeCaller \cite{RN141}, Freebayes \cite{RN538}, Platypus \cite{RN5}, and Samtools \cite{RN537}. 
+Although germline variant calling is a mature field, recent benchmark studies have shown there is still surprisingly low concordance between callers, especially for indels, and performance is highly dependent on the mapper used \cite{RN162, RN163}. To assess the performance of our method on whole-genome data, we called variants in the well studied 1000G sample NA12878, and used the gold-standard high confidence calls provided by the Genome in a Bottle (GIAB) consortium \cite{RN153} for comparison. We compared our algorithm to four widely used tools, GATK HaplotypeCaller \cite{RN141}, Freebayes \cite{RN538}, Platypus \cite{RN5}, and Samtools \cite{RN537}, following best practise protocols for each where given. Calls were made using four publicly available NA12878 whole genomes: 1000 Genomes high and low coverage reads, Illumina Platinum Genomes, and reads from the Illumina X Ten platform. To account for mapper bias, we remapped all reads using three well known read mappers (BWA-mem \cite{RN539}, Bowtie2 \cite{RN164}, and Novoalign). This resulted in 48 separate call sets. Calls were evaluated using RTG-tools \cite{RN169} which is more accurate than na\"\i ve intersection methods as calls are compared at a haplotype level. 
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.5\textwidth]{figures/giab-benchmark}
-\caption{ROC curves comparing variant callers on GIAB high confidence calls.}
-\label{fig:giab}
-\vspace{-1.5em}
-\end{figure}
+\begin{figure*}[ht]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{figures/giab_1000g}
+        \caption{}
+        \label{fig:1000g}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]{figures/giab_x10}
+        \caption{}
+        \label{fig:x10}
+    \end{subfigure}
+    \caption{ROC curves comparing variant callers on GIAB high confidence calls generated using RTG Tools using all variants (SNPs and indels). All ROC curves were scored using the VCF QUAL field. \protect\subref{fig:1000g} shows calls from high coverage 1000G data. \protect\subref{fig:x10} shows calls from X Ten data.}
+    \label{fig:giab}
+\end{figure*}
 
 \subsection*{Germline variants from exome-capture}
 
@@ -197,7 +206,7 @@ To demonstrate the accuracy of our method at calling somatic mutations in tumour
 
 \subsection*{Somatic mutations in tumour only samples}
 
-Reliable paired normal tissue samples are not always available when studying tumours from cancer patients, either because of restrictions present in a clinical setting, or because samples are archival. Most somatic mutation callers require a paired normal sample \cite{RN142, RN146, RN150, RN143, RN145}, although a recent tool was made available to specifically to deal analyse tumour only samples \cite{RN161}. We looked to test the robustness of our algorithm by running the previous samples without the paired normal samples, and compared these calls to our previous calls, and to those made by SomVarIUS.
+Reliable paired normal tissue samples are not always available when studying tumours from cancer patients, either because of restrictions present in a clinical setting, or because samples are archival. Most somatic mutation callers require a paired normal sample \cite{RN142, RN146, RN150, RN143, RN145}, although a recent tool was made available to specifically to deal analyse tumour only samples \cite{RN161}. We looked to test the robustness of our algorithm by running the previous samples without the paired normal samples, and compared these calls to our previous calls, and to those made by SomVarIUS. We benchmarked our method using data from \cite{RN147, RN155}.
 
 \subsection*{Bacterial calling using HTS data}
 
