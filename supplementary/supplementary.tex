@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
+\usepackage{hyperref}
 
 % Margins
 \topmargin=-0.45in
@@ -523,15 +524,32 @@ p(\tilde{h} | \mathcal{M}_s) = 1 - \prod_s 1 - p(\tilde{h}_s | \mathcal{M}_s)
 
 \section{Results}
 
-\subsection{Germline variant calling from exome-capture data}
+\subsection{Germline variants from WGS}
 
-\subsection{Somatic mutation detection in paired tumour-normal samples}
+\subsubsection{Data}
 
-\subsection{Somatic mutation detection in tumour only samples}
+Whole genome germline calls were made using sequencing data derived from the well studied individual NA12878. We found four sequencing libraries for NA12878, three high coverage and one low coverage, for evaluation:
 
-\subsection{De novo mutation detection in parent-offspring trios}
+\begin{enumerate}
+    \item High coverage Illumina reads from the 1000G phase 3 project, Aligned reads were downloaded from \url{ftp.1000genomes.ebi.ac.uk:/vol1/ftp/phase3/data/NA12878/high_coverage_alignment/NA12878.mapped.ILLUMINA.bwa.CEU.high_coverage_pcr_free.20130906.bam}.
+    \item Low coverage Illumina reads from the 1000G phase 3 project. Aligned reads were downloaded from \url{ftp.1000genomes.ebi.ac.uk:/vol1/ftp/phase3/data/NA12878/alignment/NA12878.mapped.ILLUMINA.bwa.CEU.low_coverage.20121211.bam}.
+    \item High coverage Illumina reads from the Illumina Platinum Genomes project. Raw FASTQ files were downloaded from \url{https://storage.cloud.google.com/genomics-public-data/platinum-genomes/fastq/ERR194147_1.fastq.gz?_ga=2.121231755.-2019438195.1508521573} and \url{https://storage.cloud.google.com/genomics-public-data/platinum-genomes/fastq/ERR194147_2.fastq.gz?_ga=2.134461938.-2019438195.1508521573}.
+    \item High coverage Illumina X Ten reads. Raw FASTQ files were downloaded from \url{https://s3-ap-southeast-2.amazonaws.com/kccg-x10-truseq-nano-v2.5-na12878/NA12878_V2.5_Robot_2_R1.fastq.gz} and \url{https://s3-ap-southeast-2.amazonaws.com/kccg-x10-truseq-nano-v2.5-na12878/NA12878_V2.5_Robot_2_R2.fastq.gz}.
+\end{enumerate}
 
-\subsection{Genotyping heterogenous bacterial samples using HTS data}
+\subsubsection{Calling pipelines}
+
+\subsubsection{Evaluation}
+
+\subsection{Germline variants from exome-capture}
+
+\subsection{De novo mutations in parent-offspring trios}
+
+\subsection{Somatic mutations in paired tumour-normal samples}
+
+\subsection{Somatic mutations in tumour only samples}
+
+\subsection{Bacterial calling using HTS data}
 
 \section{Appendix}
 
