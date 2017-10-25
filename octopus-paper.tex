@@ -66,7 +66,6 @@ Gerton Lunter\samethanks}
 \thispagestyle{empty}
 
 \begin{abstract}\textbf{
-\begin{abstract}\textbf{
     Haplotype-based variant callers, which consider physical linkage between variation sites, are recognized to give the best results for germline variation discovery and genotyping.
     However, there is a lack of haplotype-based callers that can handle experimental designs beyond detecting common germline variation in diploid individuals.
     Here we present Octopus, a flexible haplotype-based variant detection algorithm with a polymorphic Bayesian genotyping model capable of handling a range of experimental designs.
@@ -85,7 +84,6 @@ In contrast, haplotype-based methods only assume that the read mapping location 
 This is an improvement for two reasons. First, alignment errors introduced by read mappers are avoided, reducing dependence on the read mapper.
 Second, the genotype posterior signal-to-noise ratio improves with haplotype length because the number of erroneous haplotypes increases exponentially while the number of true haplotypes remains constant.
 This makes haplotype based methods more powerful than equivalent positional methods \cite{RN166}.
-}\end{abstract}
 
 {\bf These two paragraphs use ``often'' very often.}
 All haplotype-based methods published to date focus on germline variation in pooled sequencing studies, and employ similar genotyping models derived from population genetics to explain observed read data \cite{RN141, RN538, RN5}. Such models offer a poor approximation to data typically generated from other types of sequencing experiment, including tumour and bacterial sequencing. In other cases, valuable prior information, such as pedigree structure, is not fully utilised. This can result in a significant reduction in power to detect and classify real variation. Although na\"\i ve methods that implement more appropriate statistical models are often available, they often perform worse than poorly fitted haplotype-based tools.
