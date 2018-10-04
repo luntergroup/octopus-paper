@@ -1,0 +1,8 @@
+Calling de novo mutations:
+
+Besenbacher et al. (2016): GATK + custom criteria
+Jonsson et al. (2017): GATK + custom criteria
+Goldmann et al. (2018): GATK + PhaseByTransmission + ReadBackPhasing + het proband / hom parents.
+McRae et al. (2017): GATK + custom criteria
+Jin et al. (2017): GATK + TrioDenovo + custom criteria
+Jin et al. (2017): GATK + mirTrios

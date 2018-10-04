@@ -1,0 +1,13 @@
+bwa: 0.7.17-r1188
+samtools: 1.7 (using htslib 1.7)
+bcftools: 1.7 (using htslib 1.7)
+
+GATK: 4.0.0.0
+FreeBayes: v1.1.0-56-ga180635
+DeepVariant: 5.2 (model 5.0 182548131)
+Strelka: 2.9.2
+Platypus: 0.8.1
+
+Octopus: 0.3.4-alpha
+
+
