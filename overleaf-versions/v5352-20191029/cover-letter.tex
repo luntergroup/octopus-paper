@@ -1,0 +1,41 @@
+\documentclass[10pt]{letter}
+
+\usepackage{a4wide}
+\usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,menucolor=black,runcolor=black,urlcolor=black,bookmarks=true]{hyperref}
+
+\signature{\vspace{-30pt}\mbox{Daniel Cooke, David Wedge, and Gerton Lunter}}
+\address{Wellcome Centre for Human Genetics \\ University of Oxford \\ Oxford, UK \\ OX3 7BN}
+
+\longindentation=0pt
+
+\begin{document}
+
+\begin{letter}{}
+\opening{Dear Editors:}
+
+We wish to submit an original research article entitled "\emph{A unified haplotype-based method for accurate and comprehensive variant calling}" for consideration by Nature Biotechnology.
+
+In this paper, we report on a novel variant calling method that advances the field in several ways. 
+First, our method outperforms leading germline and somatic variant callers in terms of sensitivity, specificity, and range of supported variant types. Our method shows particularly strong performance when applied to recently introduced and widely used technologies such as the Illumina HiSeq X platform and the X10 Genomics protocol. 
+Second, our method is appropriate for a range of experimental designs, from identifying \textit{de novo} mutations in trios to calling germline and somatic mutations in tumour-normal pairs, in contrast to existing methods that have tended to focus on one.
+Third, our method includes several features that were developed with clinical application in mind: for example, it directly reports phasing information; the first method to do so for somatic mutations, and generates evidence BAM files that help practitioners to assess the evidence and context for calls. 
+Fourth, we provide evidence that most existing tools systematically mis-call indels as SNVs, which is likely to impact mutation signature and microsatellite instability analyses.
+Finally, our method is the first general variant caller that is able to reliably identify microinversions, and the first variant caller that calls somatic microinversions - providing a means for these events to be studied in cancer.
+
+We believe that our manuscript is appropriate for publication by Nature Biotechnology because our method's appeal to researchers from several fields matches the diverse readership of the journal. 
+Our method has already been well received by the online community; we have had hundreds of unique downloads directly from the project's GitHub website, and over 800 downloads from Bioconda. Our method has also been included into the bioinformatics pipeline tool bcbio.
+Nature Biotechnology has previously published variant calling methods that have been well received, including the somatic mutation caller MuTect\footnote{\url{https://www.nature.com/articles/nbt.2514}}, and more recently Google's germline variant caller DeepVariant\footnote{\url{https://www.nature.com/articles/nbt.4235}}. These are two of the currently best-regarded methods in their respective fields; we provide evidence that our method substantially outperforms both. 
+Furthermore, we believe that our method will be of considerable interest to those studying microsatellite instability, and the journal has previously published a method and analysis on this subject\footnote{\url{https://www.nature.com/articles/nbt.3966}}.
+To the best of our knowledge, we present the first analysis of germline and somatic mutation calling in whole-genome tumour-only samples, for which there are currently few good solutions.
+Finally, we believe that the synthetic tumour data sets that we present in our manuscript will be of considerable value to the community.
+
+We confirm that this work is original and has not been published elsewhere, nor is it currently under consideration for publication.
+
+Disclosure: Genomics plc, co-founded by G.L., have independently developed a variant caller "weCall".  The "weCall" software is unrelated to the software described in this paper.  The "weCall" software is freely available  at {\tt https://github.com/Genomicsplc/wecall} under a permissive license, and neither G.L. nor Genomics plc has any current commercial interests in "weCall".
+
+We look forward to your reply.
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}
